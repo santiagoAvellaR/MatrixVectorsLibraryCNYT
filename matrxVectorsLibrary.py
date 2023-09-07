@@ -3,6 +3,7 @@
 # Santiago Avellaneda Rodríguez
 
 import complexNumbersLibrary as cl
+import math
 
 # Adición de vectores complejos
 def sumaVect(v1, v2):
@@ -102,7 +103,90 @@ def printMtrx(m):
             print(m[i][j], end=" ")
         print()
 
-def casosPrueba():
+# ----------------------------------------------------------------------------------------------------------------------
+def multMtrxReal(m1, m2):
+    if len(m1[0]) == len(m2):
+        resultado = [[0 for _ in range(len(m2[0]))] for _ in range(len(m1))]
+        for i in range(len(m1)):
+            for j in range(len(m2[0])):
+                for k in range(len(m2)):
+                    resultado[i][j] += m1[i][k] * m2[k][j]
+        return resultado
+
+def multMtrxMtrx(m1, m2):
+    if len(m1[0]) == len(m2):
+        m3 = [[(0, 0) for u in range(len(m2[0]))] for v in range(len(m1))]
+        for a in range(len(m1)):
+            for b in range(len(m2[0])):
+                sum = (0, 0)
+                for c in range(len(m2)):
+                    add = cl.multiCmplx(m1[a][c], m2[c][b])
+                    sum = cl.sumCmplx(sum, add)
+                m3[a][b] = sum
+        return m3
+
+def multMtrxVect(m1, v1):
+    if len(m1[0]) == len(v1):
+        m3 = [[(0,0)] for v in range(len(v1))]
+        sum = (0,0)
+        for a in range(len(m1)):
+            for b in range(len(v1[0])):
+                sum = (0, 0)
+                for c in range(len(v1)):
+                    add = cl.multiCmplx(m1[a][c], v1[c][b])
+                    sum = cl.sumCmplx(sum, add)
+                m3[a][b] = sum
+        return m3
+
+def accMtrxVect(m, v):
+    return multMtrxVect(m, v)
+
+def trazaMtrx(m):
+    traza = 0
+    for i in range(len(m)):
+        for j in range(len(m[0])):
+            if i == j:
+                traza += m[i][j]
+    return traza
+
+def productoInternoMtrx(m1, m2):
+    return trazaMtrx(multMtrxMtrx(adjMtrx(m1),m2))
+
+def productInternoVector(v1, v2):
+    if len(v1) == len(v2):
+        v1 = conjVect(v1)
+        sum = (0,0)
+        for i in range(len(v1)):
+            add = cl.multiCmplx(v1[i][0], v2[i][0])
+            sum = cl.sumCmplx(sum, add)
+        return sum
+
+def normaVector(v):
+    return round(math.sqrt(productInternoVector(v, v)[0]), 2)
+
+def difVect(v1, v2):
+    if len(v1) == len(v2):
+        v3 = [[(0,0)] for i in range(len(v1))]
+        for i in range(len(v1)):
+            v3[i][0] = cl.restCmplx(v1[i][0], v2[i][0])
+        return v3
+
+def distanciaVectores(vect1, vect2):
+    a = difVect(vect1, vect2)
+    return round(math.sqrt(productInternoVector(difVect(vect1, vect2), difVect(vect1, vect2))[0]), 2)
+
+def valorPropio(m, v1):
+    if len(m[0]) == len(v1):
+        v2 = multMtrxReal(m, v1)
+        c = int(v2[0][0]) // int(v1[0][0])
+        return c
+
+def casosPrueba2():
+    print(multMtrxMtrx([[(3,-2),(-2,4),(3,3)],[(0,-1),(0,0),(-2,-1)]],[[(1,-1),(1,0),(2,3)],[(-2,-2),(0,0),(-1,2)],[(3,1),(4,-2),(-3,-4)]]))
+
+casosPrueba2()
+
+def casosPrueba1():
     # Para el vector 1x4 [[(1,-3)],[(-5,3)],[(0,-1)],[(1,0)]]
     print("1. Suma Vector 1")
     printVect(sumaVect([[(1,-3)],[(-5,3)],[(0,-1)],[(1,0)]], [[(7.5,-1)],[(3,-1)],[(1.5,1)],[(-1,1.5)]]))
