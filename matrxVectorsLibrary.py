@@ -70,8 +70,8 @@ def multEscMtrx(esc, mtrx):
 # Transpuesta de una matriz/vector
 def transMtrx(m):
     mTr = [[0 for i in range(len(m))] for i in range(len(m[0]))]
-    for k in range(len(m)):
-        for l in range(len(m[0])):
+    for k in range(len(mTr)):
+        for l in range(len(mTr[0])):
             mTr[k][l] = m[l][k]
     return mTr
 
@@ -180,9 +180,35 @@ def valorPropio(m, v1):
         v2 = multMtrxReal(m, v1)
         c = int(v2[0][0]) // int(v1[0][0])
         return c
+#-----------------------------------------------------------------------------------------------------------------------
+def checkHermitian(mtrx):
+    return adjMtrx(mtrx) == mtrx
 
+def checkUnitary(m1):
+    ident = [[(0,0) for u in range(len(m1[0]))] for v in range(len(m1))]
+    for i in range(len(ident)):
+        for j in range(len(ident[0])):
+            if i==j:
+                ident[i][j] = (1,0)
+    return multMtrxMtrx(m1, adjMtrx(m1)) == ident
+def prodctTensorMtrx(m1, m2):
+    m3 = [[(0,0) for u in range(len(m1[0]) * len(m2[0]))] for v in range(len(m1) * len(m2))]
+    for j in range(len(m3)):
+        for k in range(len(m3[0])):
+            m3[j][k] = cl.multiCmplx(m1[j // len(m2)][k // len(m2[0])], m2[j % len(m2)][j % len(m2[0])])
+    return m3
+#-----------------------------------------------------------------------------------------------------------------------
 def casosPrueba2():
     print(multMtrxMtrx([[(3,-2),(-2,4),(3,3)],[(0,-1),(0,0),(-2,-1)]],[[(1,-1),(1,0),(2,3)],[(-2,-2),(0,0),(-1,2)],[(3,1),(4,-2),(-3,-4)]]))
+    print(checkUnitary([[(1,0),(1,0)],[(1,0),(1,0)]]))
+    print(checkUnitary([[(1/math.sqrt(2),0),(1/math.sqrt(2),0)],[(1/math.sqrt(2),0),(-1/math.sqrt(2),0)]]))
+    print(checkHermitian([[(3,-2),(-2,4),(3,3)],[(0,-1),(0,0),(-2,-1)]]))
+    print(checkHermitian([[(1/math.sqrt(2),0),(1/math.sqrt(2),0)],[(1/math.sqrt(2),0),(-1/math.sqrt(2),0)]]))
+    printMtrx(prodctTensorMtrx([[(0,0),(1,0)],[(1,0),(0,0)]], [[(3,0),(3,0)],[(3,0),(-3,0)]]))
+    print(prodctTensorMtrx([[(0,0),(1,0)],[(1,0),(0,0)]], [[(3,0),(3,0)],[(3,0),(-3,0)]]))
+    print()
+    printMtrx(prodctTensorMtrx([[(3,-2),(-2,4),(3,3)],[(0,-1),(0,0),(-2,-1)]], [[(1,-1),(1,0),(2,3)],[(-2,-2),(0,0),(-1,2)],[(3,1),(4,-2),(-3,-4)]]))
+    print(prodctTensorMtrx([[(3,-2),(-2,4),(3,3)],[(0,-1),(0,0),(-2,-1)]], [[(1,-1),(1,0),(2,3)],[(-2,-2),(0,0),(-1,2)],[(3,1),(4,-2),(-3,-4)]]))
 
 casosPrueba2()
 

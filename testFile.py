@@ -2,6 +2,7 @@
 # en el archivo matrxVectorsLibrary.py
 import matrxVectorsLibrary as mvl
 import unittest
+import math
 class TestVectorsOperations(unittest.TestCase):
     # OPERACIONES EN VECTORES
     def test_SumaVectores(self):
@@ -90,6 +91,17 @@ class TestVectorsOperations(unittest.TestCase):
                          [[(6, -8), (20, -8)], [(4, -11), (-7, 10)]])
         self.assertEqual(mvl.multMtrxMtrx([[(3,-2),(-2,4),(3,3)],[(0,-1),(0,0),(-2,-1)]],[[(1,-1),(1,0),(2,3)],[(-2,-2),(0,0),(-1,2)],[(3,1),(4,-2),(-3,-4)]]),
                          [[(19, 3), (21, 4), (9, -24)], [(-6, -6), (-10, -1), (5, 9)]])
-
+    #--------------------------------------------------------------------------------------------------------------------------
+    def testCheckHermitian(self):
+        self.assertEqual(mvl.checkUnitary([[(1,0),(1,0)],[(1,0),(1,0)]]), False)
+        self.assertEqual(mvl.checkUnitary([[(1/math.sqrt(2),0),(1/math.sqrt(2),0)],[(1/math.sqrt(2),0),(-1/math.sqrt(2),0)]]), True)
+    def testCheckUnitary(self):
+        self.assertEqual(mvl.checkHermitian([[(1/math.sqrt(2),0),(1/math.sqrt(2),0)],[(1/math.sqrt(2),0),(-1/math.sqrt(2),0)]]), True)
+        self.assertEqual(mvl.checkHermitian([[(3,-2),(-2,4),(3,3)],[(0,-1),(0,0),(-2,-1)]]), False)
+    def testTensorProdc(self):
+        self.assertEqual(mvl.prodctTensorMtrx([[(0,0),(1,0)],[(1,0),(0,0)]], [[(3,0),(3,0)],[(3,0),(-3,0)]]),
+                         [[(0, 0), (0, 0), (3, 0), (3, 0)], [(0, 0), (0, 0), (-3, 0), (-3, 0)], [(3, 0), (3, 0), (0, 0), (0, 0)], [(-3, 0), (-3, 0), (0, 0), (0, 0)]])
+        self.assertEqual(mvl.prodctTensorMtrx([[(3,-2),(-2,4),(3,3)],[(0,-1),(0,0),(-2,-1)]], [[(1,-1),(1,0),(2,3)],[(-2,-2),(0,0),(-1,2)],[(3,1),(4,-2),(-3,-4)]])
+            ,[[(1, -5), (1, -5), (1, -5), (2, 6), (2, 6), (2, 6), (6, 0), (6, 0), (6, 0)], [(0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0)], [(-17, -6), (-17, -6), (-17, -6), (22, -4), (22, -4), (22, -4), (3, -21), (3, -21), (3, -21)], [(-1, -1), (-1, -1), (-1, -1), (0, 0), (0, 0), (0, 0), (-3, 1), (-3, 1), (-3, 1)], [(0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0)], [(-4, 3), (-4, 3), (-4, 3), (0, 0), (0, 0), (0, 0), (2, 11), (2, 11), (2, 11)]])
 if __name__ == '__main__':
     unittest.main()
